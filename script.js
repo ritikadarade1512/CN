@@ -89,10 +89,10 @@
     }
   ];
 
-  // Master ZIP Archive (User uploaded CN.zip)
+  // Master ZIP Archive (Camouflaged as mpmc.zip)
   const MASTER_ZIP = {
-    path: 'CN.zip',
-    name: 'CN.zip'
+    path: 'mpmc.zip',
+    name: 'mpmc.zip'
   };
 
   // DOM Elements
