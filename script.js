@@ -89,10 +89,10 @@
     }
   ];
 
-  // Master ZIP Archive
+  // Master ZIP Archive (User uploaded CN.zip)
   const MASTER_ZIP = {
-    path: 'cn_practicals.zip',
-    name: 'cn_practicals.zip'
+    path: 'CN.zip',
+    name: 'CN.zip'
   };
 
   // DOM Elements
