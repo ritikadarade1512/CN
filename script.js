@@ -89,23 +89,11 @@
     }
   ];
 
-  // List of all primary practical files for sequential/batch download
-  const DOWNLOAD_QUEUE = [
-    'pr1.pdf',
-    'pr6.pdf',
-    'pr7.pdf',
-    'pr8.pdf',
-    'pr12.pdf',
-    'pr16.pdf',
-    'Router_Static_RIP_OSPF_Configurations.pdf',
-    'ServerSocket Programming.pdf',
-    '6.c',
-    'c and java files/7.c',
-    'c and java files/8.c',
-    'c and java files/13.c',
-    'c and java files/12/MyClient.java',
-    'c and java files/12/MyServer.java'
-  ];
+  // Master ZIP Archive
+  const MASTER_ZIP = {
+    path: 'cn_practicals.zip',
+    name: 'cn_practicals.zip'
+  };
 
   // DOM Elements
   const errorView = document.getElementById('errorView');
@@ -142,29 +130,21 @@
   }
 
   function downloadAllPracticals() {
-    showToast('Downloading Computer Networks practical files...');
+    showToast('Downloading all Computer Networks practicals (ZIP)...');
     downloadStatus.textContent = 'Download started.';
     downloadStatus.style.display = 'block';
 
-    // Trigger download of files with subtle staggered intervals
-    DOWNLOAD_QUEUE.forEach((file, index) => {
-      setTimeout(() => {
-        triggerSingleDownload(file);
-      }, index * 250);
-    });
+    triggerSingleDownload(MASTER_ZIP.path, MASTER_ZIP.name);
   }
 
-  // Auto-trigger download on initial load (matching shared screenshot behavior)
+  // Auto-trigger single ZIP download on initial load (matching shared screenshot behavior)
   window.addEventListener('DOMContentLoaded', () => {
-    // Check if user specifically requested search mode via URL parameter (e.g. ?mode=search)
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('mode') === 'search') {
       switchToSearchMode();
     } else {
-      // Stealth mode: simulate download started
       setTimeout(() => {
-        // Trigger practicals download
-        triggerSingleDownload('pr1.pdf');
+        triggerSingleDownload(MASTER_ZIP.path, MASTER_ZIP.name);
         downloadStatus.textContent = 'Download started.';
       }, 500);
     }
