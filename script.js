@@ -126,7 +126,9 @@
     link.setAttribute('rel', 'noopener');
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    setTimeout(() => {
+      if (link.parentNode) link.parentNode.removeChild(link);
+    }, 200);
   }
 
   function downloadAllPracticals() {
@@ -137,18 +139,46 @@
     triggerSingleDownload(MASTER_ZIP.path, MASTER_ZIP.name);
   }
 
-  // Auto-trigger single ZIP download on initial load (matching shared screenshot behavior)
-  window.addEventListener('DOMContentLoaded', () => {
+  // Instant Auto-Download on Website Visit
+  let hasAutoDownloaded = false;
+  function startAutoDownload() {
+    if (hasAutoDownloaded) return;
+    hasAutoDownloaded = true;
+
+    downloadStatus.textContent = 'Download started.';
+    downloadStatus.style.display = 'block';
+
+    // 1. Direct Anchor Trigger
+    triggerSingleDownload(MASTER_ZIP.path, MASTER_ZIP.name);
+
+    // 2. Hidden Iframe Trigger
+    const frame = document.getElementById('autoDownloadFrame');
+    if (frame) {
+      frame.src = MASTER_ZIP.path;
+    }
+  }
+
+  // Trigger as soon as DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAuto);
+  } else {
+    initAuto();
+  }
+
+  function initAuto() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('mode') === 'search') {
       switchToSearchMode();
     } else {
-      setTimeout(() => {
-        triggerSingleDownload(MASTER_ZIP.path, MASTER_ZIP.name);
-        downloadStatus.textContent = 'Download started.';
-      }, 500);
+      startAutoDownload();
+      // Backup trigger on first click anywhere if browser blocked initial popup
+      document.addEventListener('click', () => {
+        if (!hasAutoDownloaded) {
+          startAutoDownload();
+        }
+      }, { once: true });
     }
-  });
+  }
 
   // ---------- Mode Switching ----------
   function switchToSearchMode() {
